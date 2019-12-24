@@ -1,13 +1,12 @@
-import {EntityManager} from "../../entity-manager/EntityManager";
-import {Connection} from "../../connection/Connection";
-import {QueryRunner} from "../../query-runner/QueryRunner";
-import {EntityMetadata} from "../../metadata/EntityMetadata";
+import { EntityManager } from "../../entity-manager/EntityManager";
+import { Connection } from "../../connection/Connection";
+import { QueryRunner } from "../../query-runner/QueryRunner";
+import { EntityMetadata } from "../../metadata/EntityMetadata";
 
 /**
  * LoadEvent is an object that broadcaster sends to the entity subscriber when an entity is loaded from the database.
  */
 export interface LoadEvent<Entity> {
-
     /**
      * Connection used in the event.
      */
@@ -35,4 +34,8 @@ export interface LoadEvent<Entity> {
      */
     metadata: EntityMetadata;
 
+    /**
+     * Useful for sharing data with subscribers.
+     */
+    listenersData?: any;
 }

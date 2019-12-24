@@ -35,4 +35,8 @@ export interface InsertEvent<Entity> {
      */
     metadata: EntityMetadata;
 
+    /**
+     * Useful for sharing data with subscribers.
+     */
+    listenersData?: any;
 }

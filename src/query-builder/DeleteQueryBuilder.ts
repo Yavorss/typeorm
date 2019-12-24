@@ -62,7 +62,7 @@ export class DeleteQueryBuilder<Entity> extends QueryBuilder<Entity> implements 
             // call before deletion methods in listeners and subscribers
             if (this.expressionMap.callListeners === true && this.expressionMap.mainAlias!.hasMetadata) {
                 const broadcastResult = new BroadcasterResult();
-                queryRunner.broadcaster.broadcastBeforeRemoveEvent(broadcastResult, this.expressionMap.mainAlias!.metadata);
+                queryRunner.broadcaster.broadcastBeforeRemoveEvent(broadcastResult, this.expressionMap.mainAlias!.metadata, this.listenersData);
                 if (broadcastResult.promises.length > 0) await Promise.all(broadcastResult.promises);
             }
 
@@ -90,7 +90,7 @@ export class DeleteQueryBuilder<Entity> extends QueryBuilder<Entity> implements 
             // call after deletion methods in listeners and subscribers
             if (this.expressionMap.callListeners === true && this.expressionMap.mainAlias!.hasMetadata) {
                 const broadcastResult = new BroadcasterResult();
-                queryRunner.broadcaster.broadcastAfterRemoveEvent(broadcastResult, this.expressionMap.mainAlias!.metadata);
+                queryRunner.broadcaster.broadcastAfterRemoveEvent(broadcastResult, this.expressionMap.mainAlias!.metadata, this.listenersData);
                 if (broadcastResult.promises.length > 0) await Promise.all(broadcastResult.promises);
             }
 

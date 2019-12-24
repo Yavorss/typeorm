@@ -63,6 +63,11 @@ export abstract class QueryBuilder<Entity> {
      */
     protected queryRunner?: QueryRunner;
 
+    /**
+     * This data can be used in subscribers then.
+     */
+    protected listenersData: any;
+
     // -------------------------------------------------------------------------
     // Constructor
     // -------------------------------------------------------------------------
@@ -119,6 +124,13 @@ export abstract class QueryBuilder<Entity> {
     // -------------------------------------------------------------------------
     // Public Methods
     // -------------------------------------------------------------------------
+
+    /**
+     * Set data object that can be used in subscribers then.
+     */
+    setListenersData(data: any) {
+        this.listenersData = data;
+    }
 
     /**
      * Creates SELECT query.

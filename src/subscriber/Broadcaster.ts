@@ -30,7 +30,7 @@ export class Broadcaster {
      *
      * Note: this method has a performance-optimized code organization, do not change code structure.
      */
-    broadcastBeforeInsertEvent(result: BroadcasterResult, metadata: EntityMetadata, entity?: ObjectLiteral): void {
+    broadcastBeforeInsertEvent(result: BroadcasterResult, metadata: EntityMetadata, entity?: ObjectLiteral, listenersData?: any): void {
 
         if (entity && metadata.beforeInsertListeners.length) {
             metadata.beforeInsertListeners.forEach(listener => {
@@ -51,7 +51,8 @@ export class Broadcaster {
                         queryRunner: this.queryRunner,
                         manager: this.queryRunner.manager,
                         entity: entity,
-                        metadata: metadata
+                        metadata: metadata,
+                        listenersData,
                     });
                     if (executionResult instanceof Promise)
                         result.promises.push(executionResult);
@@ -69,7 +70,7 @@ export class Broadcaster {
      *
      * Note: this method has a performance-optimized code organization, do not change code structure.
      */
-    broadcastBeforeUpdateEvent(result: BroadcasterResult, metadata: EntityMetadata, entity?: ObjectLiteral, databaseEntity?: ObjectLiteral, updatedColumns?: ColumnMetadata[], updatedRelations?: RelationMetadata[]): void { // todo: send relations too?
+    broadcastBeforeUpdateEvent(result: BroadcasterResult, metadata: EntityMetadata, entity?: ObjectLiteral, databaseEntity?: ObjectLiteral, updatedColumns?: ColumnMetadata[], updatedRelations?: RelationMetadata[], listenersData?: any): void { // todo: send relations too?
         if (entity && metadata.beforeUpdateListeners.length) {
             metadata.beforeUpdateListeners.forEach(listener => {
                 if (listener.isAllowed(entity)) {
@@ -92,7 +93,8 @@ export class Broadcaster {
                         metadata: metadata,
                         databaseEntity: databaseEntity,
                         updatedColumns: updatedColumns || [],
-                        updatedRelations: updatedRelations || []
+                        updatedRelations: updatedRelations || [],
+                        listenersData,
                     });
                     if (executionResult instanceof Promise)
                         result.promises.push(executionResult);
@@ -110,7 +112,7 @@ export class Broadcaster {
      *
      * Note: this method has a performance-optimized code organization, do not change code structure.
      */
-    broadcastBeforeRemoveEvent(result: BroadcasterResult, metadata: EntityMetadata, entity?: ObjectLiteral, databaseEntity?: ObjectLiteral): void {
+    broadcastBeforeRemoveEvent(result: BroadcasterResult, metadata: EntityMetadata, entity?: ObjectLiteral, databaseEntity?: ObjectLiteral, listenersData?: any): void {
         if (entity && metadata.beforeRemoveListeners.length) {
             metadata.beforeRemoveListeners.forEach(listener => {
                 if (listener.isAllowed(entity)) {
@@ -132,7 +134,8 @@ export class Broadcaster {
                         entity: entity,
                         metadata: metadata,
                         databaseEntity: databaseEntity,
-                        entityId: metadata.getEntityIdMixedMap(databaseEntity)
+                        entityId: metadata.getEntityIdMixedMap(databaseEntity),
+                        listenersData,
                     });
                     if (executionResult instanceof Promise)
                         result.promises.push(executionResult);
@@ -150,7 +153,7 @@ export class Broadcaster {
      *
      * Note: this method has a performance-optimized code organization, do not change code structure.
      */
-    broadcastAfterInsertEvent(result: BroadcasterResult, metadata: EntityMetadata, entity?: ObjectLiteral): void {
+    broadcastAfterInsertEvent(result: BroadcasterResult, metadata: EntityMetadata, entity?: ObjectLiteral, listenersData?: any): void {
 
         if (entity && metadata.afterInsertListeners.length) {
             metadata.afterInsertListeners.forEach(listener => {
@@ -171,7 +174,8 @@ export class Broadcaster {
                         queryRunner: this.queryRunner,
                         manager: this.queryRunner.manager,
                         entity: entity,
-                        metadata: metadata
+                        metadata: metadata,
+                        listenersData,
                     });
                     if (executionResult instanceof Promise)
                         result.promises.push(executionResult);
@@ -189,7 +193,7 @@ export class Broadcaster {
      *
      * Note: this method has a performance-optimized code organization, do not change code structure.
      */
-    broadcastAfterUpdateEvent(result: BroadcasterResult, metadata: EntityMetadata, entity?: ObjectLiteral, databaseEntity?: ObjectLiteral, updatedColumns?: ColumnMetadata[], updatedRelations?: RelationMetadata[]): void {
+    broadcastAfterUpdateEvent(result: BroadcasterResult, metadata: EntityMetadata, entity?: ObjectLiteral, databaseEntity?: ObjectLiteral, updatedColumns?: ColumnMetadata[], updatedRelations?: RelationMetadata[], listenersData?: any): void {
 
         if (entity && metadata.afterUpdateListeners.length) {
             metadata.afterUpdateListeners.forEach(listener => {
@@ -213,7 +217,8 @@ export class Broadcaster {
                         metadata: metadata,
                         databaseEntity: databaseEntity,
                         updatedColumns: updatedColumns || [],
-                        updatedRelations: updatedRelations || []
+                        updatedRelations: updatedRelations || [],
+                        listenersData,
                     });
                     if (executionResult instanceof Promise)
                         result.promises.push(executionResult);
@@ -231,7 +236,7 @@ export class Broadcaster {
      *
      * Note: this method has a performance-optimized code organization, do not change code structure.
      */
-    broadcastAfterRemoveEvent(result: BroadcasterResult, metadata: EntityMetadata, entity?: ObjectLiteral, databaseEntity?: ObjectLiteral): void {
+    broadcastAfterRemoveEvent(result: BroadcasterResult, metadata: EntityMetadata, entity?: ObjectLiteral, databaseEntity?: ObjectLiteral, listenersData?: any): void {
 
         if (entity && metadata.afterRemoveListeners.length) {
             metadata.afterRemoveListeners.forEach(listener => {
@@ -254,7 +259,8 @@ export class Broadcaster {
                         entity: entity,
                         metadata: metadata,
                         databaseEntity: databaseEntity,
-                        entityId: metadata.getEntityIdMixedMap(databaseEntity)
+                        entityId: metadata.getEntityIdMixedMap(databaseEntity),
+                        listenersData,
                     });
                     if (executionResult instanceof Promise)
                         result.promises.push(executionResult);
@@ -310,7 +316,7 @@ export class Broadcaster {
                             queryRunner: this.queryRunner,
                             manager: this.queryRunner.manager,
                             entity: entity,
-                            metadata: metadata
+                            metadata: metadata,
                         });
                         if (executionResult instanceof Promise)
                             result.promises.push(executionResult);

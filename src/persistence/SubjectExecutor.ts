@@ -95,7 +95,7 @@ export class SubjectExecutor {
         let broadcasterResult: BroadcasterResult | undefined = undefined;
         if (!this.options || this.options.listeners !== false) {
             // console.time(".broadcastBeforeEventsForAll");
-            broadcasterResult = this.broadcastBeforeEventsForAll();
+            broadcasterResult = this.broadcastBeforeEventsForAll(this.options?.data);
             if (broadcasterResult.promises.length > 0) await Promise.all(broadcasterResult.promises);
             // console.timeEnd(".broadcastBeforeEventsForAll");
         }
@@ -144,7 +144,7 @@ export class SubjectExecutor {
         // finally broadcast "after" events after we finish insert / update / remove operations
         if (!this.options || this.options.listeners !== false) {
             // console.time(".broadcastAfterEventsForAll");
-            broadcasterResult = this.broadcastAfterEventsForAll();
+            broadcasterResult = this.broadcastAfterEventsForAll(this.options?.data);
             if (broadcasterResult.promises.length > 0) await Promise.all(broadcasterResult.promises);
             // console.timeEnd(".broadcastAfterEventsForAll");
         }
@@ -179,14 +179,14 @@ export class SubjectExecutor {
     /**
      * Broadcasts "BEFORE_INSERT", "BEFORE_UPDATE", "BEFORE_REMOVE" events for all given subjects.
      */
-    protected broadcastBeforeEventsForAll(): BroadcasterResult {
+    protected broadcastBeforeEventsForAll(listenersData?: any): BroadcasterResult {
         const result = new BroadcasterResult();
         if (this.insertSubjects.length)
-            this.insertSubjects.forEach(subject => this.queryRunner.broadcaster.broadcastBeforeInsertEvent(result, subject.metadata, subject.entity!));
+            this.insertSubjects.forEach(subject => this.queryRunner.broadcaster.broadcastBeforeInsertEvent(result, subject.metadata, subject.entity!, listenersData));
         if (this.updateSubjects.length)
-            this.updateSubjects.forEach(subject => this.queryRunner.broadcaster.broadcastBeforeUpdateEvent(result, subject.metadata, subject.entity!, subject.databaseEntity, subject.diffColumns, subject.diffRelations));
+            this.updateSubjects.forEach(subject => this.queryRunner.broadcaster.broadcastBeforeUpdateEvent(result, subject.metadata, subject.entity!, subject.databaseEntity, subject.diffColumns, subject.diffRelations, listenersData));
         if (this.removeSubjects.length)
-            this.removeSubjects.forEach(subject => this.queryRunner.broadcaster.broadcastBeforeRemoveEvent(result, subject.metadata, subject.entity!, subject.databaseEntity));
+            this.removeSubjects.forEach(subject => this.queryRunner.broadcaster.broadcastBeforeRemoveEvent(result, subject.metadata, subject.entity!, subject.databaseEntity, listenersData));
         return result;
     }
 
@@ -195,14 +195,14 @@ export class SubjectExecutor {
      * Returns void if there wasn't any listener or subscriber executed.
      * Note: this method has a performance-optimized code organization.
      */
-    protected broadcastAfterEventsForAll(): BroadcasterResult {
+    protected broadcastAfterEventsForAll(listenersData?: any): BroadcasterResult {
         const result = new BroadcasterResult();
         if (this.insertSubjects.length)
-            this.insertSubjects.forEach(subject => this.queryRunner.broadcaster.broadcastAfterInsertEvent(result, subject.metadata, subject.entity!));
+            this.insertSubjects.forEach(subject => this.queryRunner.broadcaster.broadcastAfterInsertEvent(result, subject.metadata, subject.entity!, listenersData));
         if (this.updateSubjects.length)
-            this.updateSubjects.forEach(subject => this.queryRunner.broadcaster.broadcastAfterUpdateEvent(result, subject.metadata, subject.entity!, subject.databaseEntity, subject.diffColumns, subject.diffRelations));
+            this.updateSubjects.forEach(subject => this.queryRunner.broadcaster.broadcastAfterUpdateEvent(result, subject.metadata, subject.entity!, subject.databaseEntity, subject.diffColumns, subject.diffRelations, listenersData));
         if (this.removeSubjects.length)
-            this.removeSubjects.forEach(subject => this.queryRunner.broadcaster.broadcastAfterRemoveEvent(result, subject.metadata, subject.entity!, subject.databaseEntity));
+            this.removeSubjects.forEach(subject => this.queryRunner.broadcaster.broadcastAfterRemoveEvent(result, subject.metadata, subject.entity!, subject.databaseEntity, listenersData));
         return result;
     }
 
